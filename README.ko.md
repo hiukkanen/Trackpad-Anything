@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1><img src="docs/images/app-icon.png" width="64" align="center" alt="Trackpad Anything 앱 아이콘"> Trackpad Anything</h1>
+<h1><img src="docs/images/readme-icon.png" width="64" align="center" alt="Trackpad Anything 앱 아이콘"> Trackpad Anything</h1>
 
 ### macOS Sonoma에서 USB‑C 매직 트랙패드 쓰기
 

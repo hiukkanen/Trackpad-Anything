@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1><img src="docs/images/app-icon.png" width="64" align="center" alt="Trackpad Anything app icon"> Trackpad Anything</h1>
+<h1><img src="docs/images/readme-icon.png" width="64" align="center" alt="Trackpad Anything app icon"> Trackpad Anything</h1>
 
 ### Make the USB‑C Magic Trackpad work on macOS Sonoma
 

@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1><img src="docs/images/app-icon.png" width="64" align="center" alt="Trackpad Anything 应用图标"> Trackpad Anything</h1>
+<h1><img src="docs/images/readme-icon.png" width="64" align="center" alt="Trackpad Anything 应用图标"> Trackpad Anything</h1>
 
 ### 在 macOS Sonoma 上使用 USB‑C 版妙控板
 
