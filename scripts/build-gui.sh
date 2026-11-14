@@ -15,10 +15,11 @@ python3 - "$app" <<'PY'
 import sys,plistlib
 from pathlib import Path
 p=Path(sys.argv[1])/'Contents/Info.plist'
-p.write_bytes(plistlib.dumps({'CFBundleIdentifier':'org.trackpadcompat.gui.development','CFBundleName':'Trackpad Anything','CFBundleDisplayName':'Trackpad Anything','CFBundleExecutable':'TrackpadCompatGUI','CFBundlePackageType':'APPL','CFBundleVersion':'1.0.0','CFBundleShortVersionString':'1.0.0','NSHumanReadableCopyright':'© 2026 KUGNUS LAB','LSMinimumSystemVersion':'14.0','NSHighResolutionCapable':True,'CFBundleIconFile':'AppIcon'}))
+p.write_bytes(plistlib.dumps({'CFBundleIdentifier':'org.trackpadcompat.gui.development','CFBundleName':'Trackpad Anything','CFBundleDisplayName':'Trackpad Anything','CFBundleExecutable':'TrackpadCompatGUI','CFBundlePackageType':'APPL','CFBundleVersion':'1.0.0','CFBundleShortVersionString':'1.0.0','NSHumanReadableCopyright':'© 2026 KUGNUS LAB','LSMinimumSystemVersion':'14.0','NSHighResolutionCapable':True,'CFBundleIconFile':'AppIcon','CFBundleDevelopmentRegion':'en','CFBundleLocalizations':['en','ko','ja','zh-Hans']}))
 PY
 if [ -f Resources/AppIcon.icns ]; then cp Resources/AppIcon.icns "$app/Contents/Resources/"; fi
 cp Resources/MenuBarMascot.png Resources/MenuBarMascot@2x.png "$app/Contents/Resources/"
+cp GUI/src/locales.json "$app/Contents/Resources/locales.json"
 # TC_SIGN=adhoc: no personal certificate (release builds, or building from source without setup).
 if [ "${TC_SIGN:-local}" = adhoc ]; then
   for target in "$app/Contents/Resources/usb-helper" "$app/Contents/Resources/bt-spoof" "$app"; do codesign --force --sign - --timestamp=none "$target"; done
