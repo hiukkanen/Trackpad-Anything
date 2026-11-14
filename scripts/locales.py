@@ -112,7 +112,7 @@ T = {
 '이전 데스크탑': ('Previous desktop', '前のデスクトップ', '上一个桌面'),
 '다음 데스크탑': ('Next desktop', '次のデスクトップ', '下一个桌面'),
 'Mission Control 열기': ('Open Mission Control', 'Mission Controlを開く', '打开调度中心'),
-'Parsec과 Jump Desktop의 전체 화면에서도 로컬 데스크탑을 전환합니다': ('Switches local desktops even in full‑screen Parsec and Jump Desktop', 'ParsecやJump Desktopのフルスクリーン中でもローカルのデスクトップを切り替えます', '即使在全屏幕 Parsec 和 Jump Desktop 中也能切换本地桌面'),
+'Parsec, Jump Desktop 등 원격 데스크탑 앱의 전체 화면에서도 로컬 데스크탑을 전환합니다': ('Switches local desktops even while a remote desktop app (Parsec, Jump Desktop and others) is full screen', 'Parsec、Jump Desktopなどのリモートデスクトップアプリがフルスクリーンでも、ローカルのデスクトップを切り替えます', '即使 Parsec、Jump Desktop 等远程桌面应用处于全屏状态，也能切换本地桌面'),
 '현재 동작': ('Current gestures', '現在の操作', '当前手势'),
 
 # ---- Shortcuts page

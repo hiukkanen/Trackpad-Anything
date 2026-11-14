@@ -47,7 +47,7 @@ First came a USB driver for the cable. Bluetooth was harder: Sonoma throws the t
 | 🛜 **Bluetooth, natively** | One click lets macOS's own Magic Trackpad 2 driver run the USB‑C model. Gestures come from macOS itself, so they feel exactly like the real thing. |
 | 🔌 **USB, too** | A built‑in gesture engine reads the trackpad directly over the cable: pointer, two‑finger scroll, pinch, Spaces, Mission Control, App Exposé and more. |
 | ⌨️ **Keyboard shortcuts** | **⌃⌥⌘←** / **⌃⌥⌘→** switch desktops on *this* Mac with the real swipe animation, even inside a full‑screen remote desktop. Built in, no Karabiner needed. |
-| 🖥 **Remote‑desktop friendly** | Four‑finger swipes and shortcuts move *local* Spaces even in full‑screen Parsec or Jump Desktop. |
+| 🖥 **Remote‑desktop friendly** | Four‑finger swipes and shortcuts move *local* Spaces even while a remote desktop app is full screen. Works with Parsec, Jump Desktop and other remote desktop apps. |
 | 🔋 **Battery in the menu bar** | The mascot plus a battery with the percentage inside. It follows light and dark menu bars. |
 | 🎛 **One app for both** | Pointer, scroll and gesture settings in one place. The optional **settings mirror** applies them to macOS's trackpad preferences while you're on Bluetooth. |
 | 🌐 **Four languages** | English, 한국어, 日本語, 简体中文. Follows your system language, or pick one in the sidebar. |
@@ -163,7 +163,7 @@ Getting here took some digging. On Sonoma, the raw Bluetooth touch reports (`0x3
 | Recognized as a trackpad by macOS | ✅ | — |
 | Pointer, two‑finger scroll | ✅ | ✅ |
 | Spaces swipe, Mission Control | 🍎 | ✅ |
-| ⌃⌥⌘←/→ desktop shortcuts | 🧪 | 🧪 |
+| ⌃⌥⌘←/→ desktop shortcuts | ✅ | ✅ |
 | Battery in the menu bar | ✅ | ✅ |
 | Pinch, App Exposé, Launchpad, Show Desktop | 🍎 | 🧪 |
 | Force Click, haptics | 🍎 🧪 | ❌ |
