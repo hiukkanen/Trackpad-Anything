@@ -1,0 +1,6 @@
+#import <Foundation/Foundation.h>
+#import "../Sources/App/SettingsStore.h"
+#include <assert.h>
+int main(){@autoreleasepool{NSString*dir=[NSTemporaryDirectory() stringByAppendingPathComponent:NSUUID.UUID.UUIDString];[[NSFileManager defaultManager]createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:nil];NSString*p=[dir stringByAppendingPathComponent:@"settings.plist"];
+ assert(TCSetOption("pointerSpeed",.57));assert(TCSetOption("scrollSpeed",.41));assert(TCSetOption("lookup",1));assert(TCSaveSettings(p));TCSetOption("pointerSpeed",.3);TCSetOption("threeFingerDrag",1);assert(TCLoadSettings(p));NSDictionary*d=TCReadOptions();assert(fabs([d[@"pointerSpeed"]doubleValue]-.57)<1e-9);assert([d[@"lookup"]boolValue]&&![d[@"threeFingerDrag"]boolValue]);
+ [@{@"pointerSpeed":@999,@"scrollSpeed":@"bad",@"unknown":@1} writeToFile:p atomically:YES];assert(TCLoadSettings(p));d=TCReadOptions();assert(fabs([d[@"pointerSpeed"]doubleValue]-.57)<1e-9);assert(fabs([d[@"scrollSpeed"]doubleValue]-.41)<1e-9);assert(!TCSaveSettings([dir stringByAppendingPathComponent:@"missing/settings.plist"]));[[NSFileManager defaultManager]removeItemAtPath:dir error:nil];puts("PASS: settings round trip, mutually exclusive gestures, malformed values and write failure");}}

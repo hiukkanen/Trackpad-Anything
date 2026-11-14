@@ -1,0 +1,25 @@
+export type Feature = {id:string; group:string; name:string; gesture:string; state:'verified'|'implemented'|'pending'; note?:string};
+export const features:Feature[]=[
+{id:'pointer',group:'포인터 및 클릭',name:'포인터 이동',gesture:'한 손가락',state:'verified'},
+{id:'click',group:'포인터 및 클릭',name:'클릭 및 클릭 드래그',gesture:'누르기',state:'implemented'},
+{id:'tap',group:'포인터 및 클릭',name:'탭하여 클릭',gesture:'한 손가락 탭',state:'implemented'},
+{id:'secondary',group:'포인터 및 클릭',name:'보조 클릭',gesture:'두 손가락 클릭·탭',state:'implemented'},
+{id:'lookup',group:'포인터 및 클릭',name:'찾아보기 및 데이터 탐색',gesture:'세 손가락 탭 / 세게 클릭',state:'pending'},
+{id:'scroll',group:'스크롤 및 확대',name:'스크롤',gesture:'두 손가락 이동',state:'verified'},
+{id:'natural',group:'스크롤 및 확대',name:'자연스러운 스크롤',gesture:'손가락 이동 방향',state:'implemented'},
+{id:'momentum',group:'스크롤 및 확대',name:'관성 스크롤',gesture:'손을 뗀 뒤 감속',state:'pending'},
+{id:'zoom',group:'스크롤 및 확대',name:'확대 또는 축소',gesture:'두 손가락 벌리기·오므리기',state:'implemented'},
+{id:'smart',group:'스크롤 및 확대',name:'스마트 확대/축소',gesture:'두 손가락 이중 탭',state:'pending'},
+{id:'rotate',group:'스크롤 및 확대',name:'회전',gesture:'두 손가락 회전',state:'pending'},
+{id:'pages',group:'추가 제스처',name:'페이지 쓸어넘기기',gesture:'두 손가락 좌우',state:'pending'},
+{id:'spaces',group:'추가 제스처',name:'전체 화면 앱·데스크탑 전환',gesture:'네 손가락 좌우',state:'verified'},
+{id:'mission',group:'추가 제스처',name:'Mission Control',gesture:'네 손가락 위로',state:'verified'},
+{id:'expose',group:'추가 제스처',name:'앱 윈도우',gesture:'네 손가락 아래로',state:'implemented'},
+{id:'launchpad',group:'추가 제스처',name:'Launchpad',gesture:'엄지와 세 손가락 오므리기',state:'pending'},
+{id:'desktop',group:'추가 제스처',name:'데스크탑 보기',gesture:'엄지와 세 손가락 벌리기',state:'pending'},
+{id:'notifications',group:'추가 제스처',name:'알림 센터',gesture:'오른쪽 가장자리에서 두 손가락 쓸기',state:'pending'},
+{id:'drag',group:'손쉬운 사용',name:'세 손가락 드래그',gesture:'세 손가락 이동',state:'implemented'},
+{id:'pressure',group:'압력 및 햅틱',name:'세게 클릭 및 햅틱 피드백',gesture:'더 깊게 누르기',state:'pending'},
+{id:'clickForce',group:'압력 및 햅틱',name:'클릭 강도',gesture:'가볍게 · 중간 · 강하게',state:'pending'},
+];
+export const states={verified:'동작 확인',implemented:'실기 확인 필요',pending:'개발 예정'};

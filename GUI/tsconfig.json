@@ -1,0 +1,1 @@
+{"compilerOptions":{"target":"ES2022","module":"ESNext","jsx":"react-jsx","moduleResolution":"Bundler","strict":true,"allowJs":true,"skipLibCheck":true,"noEmit":true,"lib":["ES2022","DOM","DOM.Iterable"]},"include":["src/App.tsx","src/main.tsx","src/features.ts","src/astryx-themes.js","src/themes"]}

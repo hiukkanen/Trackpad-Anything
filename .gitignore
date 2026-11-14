@@ -1,0 +1,23 @@
+# Build output
+build/
+GUI/dist/
+GUI/node_modules/
+*.o
+__pycache__/
+
+# macOS
+.DS_Store
+
+# Local research, logs and planning notes (not part of the product)
+experiments/
+docs/PRODUCT-SPEC.ko.md
+docs/PENCIL-RESEARCH.ko.md
+docs/gui-concepts/
+docs/branding/
+docs/baseline/
+trackpad-anything-logo-sheet.png
+scripts/stage-bluetooth-probe.sh
+scripts/build-bluetooth-probe.sh
+
+# Agent scratch files
+GUI/GEMINI.md

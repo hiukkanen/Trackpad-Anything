@@ -1,0 +1,44 @@
+{
+  "name": "trackpad",
+  "like": "neutral",
+  "mode": "both",
+  "settings": [
+    {
+      "thing": "accent",
+      "value": "#e5493f",
+      "source": "dial"
+    },
+    {
+      "thing": "neutral",
+      "value": "#a0786a",
+      "source": "dial"
+    },
+    {
+      "thing": "--color-background-body",
+      "value": "#fdf5ee",
+      "source": "token",
+      "mode": "light"
+    },
+    {
+      "thing": "--color-text-primary",
+      "value": "#8f2721",
+      "source": "token",
+      "on": "heading",
+      "mode": "light",
+      "note": "feeds color on heading (when color=primary)"
+    },
+    {
+      "thing": "corners",
+      "value": "large",
+      "source": "dial"
+    },
+    {
+      "thing": "--color-background-surface",
+      "value": "#fffaf5",
+      "source": "token",
+      "mode": "light"
+    }
+  ],
+  "lifted": [],
+  "palette": "3d69bf848fd1dbdfbb8287a740354b46079eb9669ac5e4284a853912329da9d0"
+}
