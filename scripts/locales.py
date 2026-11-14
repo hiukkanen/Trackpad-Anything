@@ -117,7 +117,13 @@ T = {
 
 # ---- Shortcuts page
 '로컬 데스크탑 전환': ('Switch local desktops', 'ローカルデスクトップの切り替え', '切换本地桌面'),
-'기존 Karabiner 설정을 유지합니다. GUI에서 단축키 변경은 아직 제공하지 않습니다.': ('Your existing Karabiner setup is kept. Changing shortcuts in the app isn’t available yet.', '既存のKarabiner設定はそのまま使えます。アプリ内でのショートカット変更はまだ対応していません。', '保留现有的 Karabiner 设置。暂不支持在应用中更改快捷键。'),
+'키보드 단축키 사용': ('Keyboard shortcuts', 'キーボードショートカットを使用', '使用键盘快捷键'),
+'Karabiner 없이 동작합니다. 원격 앱 전체 화면에서도 이 Mac의 데스크탑을 전환합니다.': ('Built in, no Karabiner needed. Switches this Mac’s desktops even inside full‑screen remote apps.', 'Karabinerなしで動作します。リモートアプリのフルスクリーン中でもこのMacのデスクトップを切り替えます。', '内置功能，无需 Karabiner。即使在全屏幕远程应用中也能切换这台 Mac 的桌面。'),
+'단축키 변경은 다음 버전에서 제공할 예정입니다.': ('Custom shortcuts are coming in a future version.', 'ショートカットの変更は今後のバージョンで対応予定です。', '自定义快捷键将在后续版本中提供。'),
+'손쉬운 사용 권한이 필요합니다': ('Accessibility permission needed', 'アクセシビリティの許可が必要です', '需要辅助功能权限'),
+'시스템 설정 > 개인정보 보호 및 보안 > 손쉬운 사용에서 Trackpad Anything을 허용하세요.': ('Allow Trackpad Anything in System Settings > Privacy & Security > Accessibility.', 'システム設定 > プライバシーとセキュリティ > アクセシビリティでTrackpad Anythingを許可してください。', '请在“系统设置” > “隐私与安全性” > “辅助功能”中允许 Trackpad Anything。'),
+'키보드 단축키를 켰습니다': ('Keyboard shortcuts on', 'キーボードショートカットをオンにしました', '已打开键盘快捷键'),
+'키보드 단축키를 껐습니다': ('Keyboard shortcuts off', 'キーボードショートカットをオフにしました', '已关闭键盘快捷键'),
 
 # ---- Device & diagnostics page
 '입력 엔진': ('Input engine', '入力エンジン', '输入引擎'),

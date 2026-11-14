@@ -1,11 +1,8 @@
 <div align="center">
 
-<img src="docs/images/app-icon.png" width="128" alt="Trackpad Anything app icon">
+<img src="docs/images/app-icon.png" width="160" alt="Trackpad Anything app icon">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-dark.png">
-  <img src="docs/images/logo-light.png" width="360" alt="Trackpad Anything">
-</picture>
+# Trackpad Anything
 
 ### Make the USB‑C Magic Trackpad work on macOS Sonoma
 
@@ -17,7 +14,9 @@ Full multi‑touch gestures over **Bluetooth** and **USB** — without upgrading
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-8F2721)](LICENSE)
 [![SIP stays on](https://img.shields.io/badge/SIP-stays%20on-2ea44f)](#is-it-safe)
 
-[**Download**](https://github.com/souluk319/Trackpad-Anything/releases/latest) · [How it works](#how-it-works) · [FAQ](#faq) · [한국어](README.ko.md)
+[**Download**](https://github.com/souluk319/Trackpad-Anything/releases/latest) · [How it works](#how-it-works) · [FAQ](#faq)
+
+**English** · [한국어](README.ko.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md)
 
 <img src="docs/images/menu-bar.png" width="420" alt="Menu bar: mascot with battery level">
 
@@ -38,7 +37,7 @@ First came a USB driver for the cable. Bluetooth was harder: Sonoma throws the t
 **Trackpad Anything** is the result. It brings the USB‑C trackpad to life on Sonoma, without a kernel extension, without turning off SIP, and without a paid developer account. If you're stuck on an older macOS for your own reasons, it's for you too.
 
 <div align="center">
-<img src="docs/images/bluetooth.png" width="820" alt="Bluetooth page: gestures active through macOS's own driver">
+<img src="docs/images/en/bluetooth.png" width="820" alt="Bluetooth page: gestures active through macOS's own driver">
 </div>
 
 ## Features
@@ -47,19 +46,19 @@ First came a USB driver for the cable. Bluetooth was harder: Sonoma throws the t
 |---|---|
 | 🛜 **Bluetooth, natively** | One click lets macOS's own Magic Trackpad 2 driver run the USB‑C model. Gestures come from macOS itself, so they feel exactly like the real thing. |
 | 🔌 **USB, too** | A built‑in gesture engine reads the trackpad directly over the cable: pointer, two‑finger scroll, pinch, Spaces, Mission Control, App Exposé and more. |
+| ⌨️ **Keyboard shortcuts** | **⌃⌥⌘←** / **⌃⌥⌘→** switch desktops on *this* Mac with the real swipe animation, even inside a full‑screen remote desktop. Built in, no Karabiner needed. |
+| 🖥 **Remote‑desktop friendly** | Four‑finger swipes and shortcuts move *local* Spaces even in full‑screen Parsec or Jump Desktop. |
 | 🔋 **Battery in the menu bar** | The mascot plus a battery with the percentage inside. It follows light and dark menu bars. |
 | 🎛 **One app for both** | Pointer, scroll and gesture settings in one place. The optional **settings mirror** applies them to macOS's trackpad preferences while you're on Bluetooth. |
-| 🖥 **Remote‑desktop friendly** | Four‑finger swipes switch *local* Spaces even inside full‑screen Parsec or Jump Desktop sessions (USB engine). |
-| ↩️ **Reversible** | Backups are made automatically. "Restore" puts everything back. |
+| 🌐 **Four languages** | English, 한국어, 日本語, 简体中文. Follows your system language, or pick one in the sidebar. |
+| ↩️ **Reversible** | Backups are made automatically. **Restore** puts everything back. |
 
 <table>
 <tr>
-<td><img src="docs/images/pointer-and-scroll.png" alt="Pointer and scroll settings"></td>
-<td><img src="docs/images/spaces.png" alt="Space switching"></td>
+<td><img src="docs/images/en/pointer-and-scroll.png" alt="Pointer & Scroll settings"></td>
+<td><img src="docs/images/en/spaces.png" alt="Spaces: switch local desktops"></td>
 </tr>
 </table>
-
-> The app's interface is in Korean for now. The buttons you need are listed in [Usage](#usage).
 
 ## Requirements
 
@@ -75,7 +74,7 @@ First came a USB driver for the cable. Bluetooth was harder: Sonoma throws the t
 2. Move **Trackpad Anything.app** to **Applications**.
 3. **First launch:** the app isn't notarized, so macOS will warn you the first time.
    Right‑click the app → **Open** → **Open**. Or go to System Settings → Privacy & Security → **Open Anyway**.
-4. For USB use, allow **Accessibility** when asked. Bluetooth doesn't need it.
+4. Allow **Accessibility** when asked. It's needed for the USB gesture engine and keyboard shortcuts. Bluetooth gestures work without it.
 
 <details>
 <summary>Prefer the terminal?</summary>
@@ -90,18 +89,37 @@ xattr -dr com.apple.quarantine "/Applications/Trackpad Anything.app"
 ### Bluetooth (recommended)
 
 1. Pair the trackpad over Bluetooth as usual.
-2. Open Trackpad Anything → sidebar **블루투스 연결** (Bluetooth).
-3. Click **블루투스 제스처 켜기** (Enable Bluetooth gestures) and enter your administrator password.
+2. Open Trackpad Anything → **Bluetooth** in the sidebar.
+3. Click **Enable Bluetooth Gestures** and enter your administrator password.
 4. Bluetooth reconnects for a few seconds. The trackpad then runs on macOS's own driver.
 
 That's it. It keeps working after reboots, even when the app is closed.
-To undo it, click **원래대로 되돌리기** (Restore).
+To undo it, click **Restore**.
 
 > **Charging tip:** plugging the trackpad into *this Mac* with a cable re‑pairs it, and that resets the change. Charge from a wall adapter, or click *Enable* again afterwards.
 
 ### USB
 
-Plug in the cable and keep the app running in the menu bar. The first time, it asks for your administrator password once to attach its USB helper. Settings live under **포인터 및 스크롤** (Pointer & Scroll), **제스처** (Gestures) and **화면 전환** (Spaces).
+Plug in the cable and keep the app running in the menu bar. The first time, it asks for your administrator password once to attach its USB helper. Settings live under **Pointer & Scroll**, **Gestures** and **Spaces**.
+
+### Keyboard shortcuts
+
+| Shortcut | Action |
+|---|---|
+| **⌃ Control + ⌥ Option + ⌘ Command + ←** | Previous desktop / full‑screen app |
+| **⌃ Control + ⌥ Option + ⌘ Command + →** | Next desktop / full‑screen app |
+
+These switch Spaces on the Mac in front of you, with the same animation as a four‑finger swipe. Turn them on or off under **Shortcuts**. They need Accessibility permission.
+
+<details>
+<summary>Scripting or Karabiner users</summary>
+
+The app also ships a tiny CLI you can call from anywhere:
+
+```sh
+"/Applications/Trackpad Anything.app/Contents/Resources/space-command" left   # or: right
+```
+</details>
 
 ## How it works
 
@@ -109,12 +127,13 @@ Plug in the cable and keep the app running in the menu bar. The first time, it a
 flowchart LR
   subgraph BT[Bluetooth]
     A[USB‑C trackpad<br/>PID 0x0324] -->|bluetoothd cache<br/>PID → 0x0265| B[macOS Magic Trackpad 2 driver<br/>AppleHSBluetoothDriver]
-    B --> C[Native gestures,<br/>Force Click, battery]
+    B --> C[Native gestures,<br/>battery]
   end
   subgraph USB
     D[USB‑C trackpad] -->|libusb helper<br/>multitouch mode| E[Trackpad Anything<br/>gesture engine]
     E --> F[Pointer, scroll, Spaces,<br/>Mission Control]
   end
+  K[⌃⌥⌘ ← / →] --> E
 ```
 
 **Bluetooth.** Over Bluetooth, the USB‑C trackpad speaks the same protocol as the Lightning Magic Trackpad 2, and Sonoma already ships a driver for that one. The only thing in the way is the product ID. Trackpad Anything changes the trackpad's product ID **in the Mac's Bluetooth device cache** from `0x0324` to `0x0265`, then restarts `bluetoothd`. macOS picks the built‑in driver as if it were the Lightning model.
@@ -125,6 +144,8 @@ flowchart LR
 - A root‑only backup is kept next to the cache (`…devices.plist.tc-before-pid-spoof`).
 
 **USB.** A small root helper (`usb-helper`, libusb) borrows the trackpad's multitouch interface while the app runs. It switches the trackpad to multitouch mode and streams raw frames to the gesture engine, which posts standard macOS events. When the app quits, the helper hands the interface back to macOS.
+
+**Shortcuts.** The app watches for ⌃⌥⌘←/→, consumes them so a remote app doesn't also receive them, and asks the gesture engine for a native Dock swipe. That's why the switch happens on your Mac, not on the remote one.
 
 Getting here took some digging. On Sonoma, the raw Bluetooth touch reports (`0x31`) are dropped before they reach user space, and the L2CAP channels belong to `bluetoothd`. The full write‑up is in [docs/BLUETOOTH-INVESTIGATION.ko.md](docs/BLUETOOTH-INVESTIGATION.ko.md) (Korean).
 
@@ -142,6 +163,7 @@ Getting here took some digging. On Sonoma, the raw Bluetooth touch reports (`0x3
 | Recognized as a trackpad by macOS | ✅ | — |
 | Pointer, two‑finger scroll | ✅ | ✅ |
 | Spaces swipe, Mission Control | 🍎 | ✅ |
+| ⌃⌥⌘←/→ desktop shortcuts | 🧪 | 🧪 |
 | Battery in the menu bar | ✅ | ✅ |
 | Pinch, App Exposé, Launchpad, Show Desktop | 🍎 | 🧪 |
 | Force Click, haptics | 🍎 🧪 | ❌ |
@@ -168,6 +190,10 @@ Not yet. The release is Apple Silicon only, because the bundled libusb is arm64.
 To edit the Bluetooth cache, which is root‑only, and to start the USB helper. Nothing else runs with elevated rights.
 </details>
 
+<details><summary><b>Do the shortcuts work with a regular keyboard and mouse?</b></summary>
+Yes. They don't depend on the trackpad at all, so they're handy for any remote‑desktop setup.
+</details>
+
 <details><summary><b>System Information still shows product ID 0x0324.</b></summary>
 That's expected. It's a display field and doesn't affect which driver is used.
 </details>
@@ -187,16 +213,19 @@ bash scripts/package-release.sh           # → build/release/*.zip
 
 For day‑to‑day development, `python3 scripts/setup-local-signing.py` creates a stable local signing identity, so macOS keeps the Accessibility permission across rebuilds. See [docs/LOCAL-SIGNING.ko.md](docs/LOCAL-SIGNING.ko.md).
 
+Translations live in [`scripts/locales.py`](scripts/locales.py). It generates `GUI/src/locales.json` and fails if a string used in the code has no translation.
+
 <details>
 <summary>Project layout</summary>
 
 ```
-Sources/App            Native host (menu bar, WebKit UI bridge, settings mirror)
+Sources/App            Native host (menu bar, shortcuts, WebKit UI bridge, settings mirror, i18n)
 Sources/Core           Gesture engine (USB frames → macOS events)
 Sources/USBHelper      Root USB helper (libusb)
 Sources/BluetoothSetup bt-spoof: Bluetooth cache product-ID tool
+Sources/Command        space-command CLI
 GUI/                   Settings UI (React + Astryx)
-scripts/               Build, release, signing, brand assets
+scripts/               Build, release, signing, brand assets, translations
 tests/                 Engine and settings tests
 ```
 </details>

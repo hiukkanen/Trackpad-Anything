@@ -13,7 +13,7 @@ def run(args):
 try:
     run(['security','unlock-keychain','-p',(root/'keychain-password').read_text(),kc])
     app=Path(sys.argv[1]).resolve()
-    for target in [app/'Contents/Resources/usb-helper',app/'Contents/Resources/bt-spoof',app]:
+    for target in [app/'Contents/Resources/usb-helper',app/'Contents/Resources/bt-spoof',app/'Contents/Resources/space-command',app]:
         run(['codesign','--force','--sign',info['identity'],'--keychain',kc,'--timestamp=none',str(target)])
     run(['codesign','--verify','--strict',str(app)])
     print('Signed and verified with TrackpadCompat Local Development.')
