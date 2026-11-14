@@ -1,8 +1,6 @@
 <div align="center">
 
-<img src="docs/images/app-icon.png" width="160" alt="Trackpad Anything アプリアイコン">
-
-# Trackpad Anything
+<h1><img src="docs/images/app-icon.png" width="64" align="center" alt="Trackpad Anything アプリアイコン"> Trackpad Anything</h1>
 
 ### macOS SonomaでUSB‑C版Magic Trackpadを使う
 

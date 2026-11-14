@@ -34,7 +34,8 @@ static const int kPIDUSBC=804,kPIDLightning=613;
 @property NSMenuItem*infoItem;
 @property NSArray<NSMenuItem*>*menuItems;
 @property CFMachPortRef hotkeyTap;
-@property BOOL autoStarted; // engine auto-start happens once per launch (never after a manual revert)
+@property BOOL userStopped; // set by a manual revert to the 0.2 app; otherwise the engine is kept running
+@property CFAbsoluteTime lastAutoStart;
 @end
 static TPHost*currentHost;
 static void systemAction(const char*action){NSString*a=[NSString stringWithUTF8String:action];dispatch_async(dispatch_get_main_queue(),^{BOOL ok=TCSystemAction(a);currentHost.notice=ok?TCLf(@"실행: {0}",@[a]):TCLf(@"동작 실패: {0}",@[a]);});}
@@ -57,7 +58,7 @@ static void systemAction(const char*action){NSString*a=[NSString stringWithUTF8S
  self.deviceTimer=[NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(watchDevice) userInfo:nil repeats:YES];
  // Take over from the 0.2 app so only one menu bar item remains.
  [NSUserDefaults.standardUserDefaults registerDefaults:@{@"hotkeys":@YES}];[self updateHotkeys];
- if(AXIsProcessTrusted()){self.autoStarted=YES;dispatch_async(dispatch_get_main_queue(),^{[self activateEngine];});}
+ if(AXIsProcessTrusted()){self.lastAutoStart=CFAbsoluteTimeGetCurrent();dispatch_async(dispatch_get_main_queue(),^{[self activateEngine];});}
  // Ask once at launch: this registers the app in System Settings > Accessibility so the user only flips the switch.
  else{AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)@{(__bridge NSString*)kAXTrustedCheckOptionPrompt:@YES});
   if([self engineRunning])self.notice=TCL(@"이전 앱(0.2)이 실행 중입니다. 손쉬운 사용 허용 후 적용 시작을 누르면 하나로 합쳐집니다");}
@@ -78,23 +79,23 @@ static void systemAction(const char*action){NSString*a=[NSString stringWithUTF8S
 -(NSString*)socketPath{return [[self support]stringByAppendingPathComponent:@"trackpad.sock"];}
 -(void)stopNewEngine{TCStop();if(self.engineActive)unlink(self.socketPath.fileSystemRepresentation);}
 -(void)applicationWillTerminate:(NSNotification*)note{(void)note;[self stopNewEngine];}
--(void)restore:(id)sender{(void)sender;[self stopNewEngine];dispatch_after(dispatch_time(DISPATCH_TIME_NOW,NSEC_PER_SEC),dispatch_get_main_queue(),^{[[NSWorkspace sharedWorkspace]openApplicationAtURL:[NSURL fileURLWithPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Applications/TrackpadCompat Backup/TrackpadCompat.app"]] configuration:[NSWorkspaceOpenConfiguration configuration] completionHandler:nil];self.notice=TCL(@"기존 입력 앱을 다시 열었습니다");[self publish];});}
+-(void)restore:(id)sender{(void)sender;self.userStopped=YES;[self stopNewEngine];dispatch_after(dispatch_time(DISPATCH_TIME_NOW,NSEC_PER_SEC),dispatch_get_main_queue(),^{[[NSWorkspace sharedWorkspace]openApplicationAtURL:[NSURL fileURLWithPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Applications/TrackpadCompat Backup/TrackpadCompat.app"]] configuration:[NSWorkspaceOpenConfiguration configuration] completionHandler:nil];self.notice=TCL(@"기존 입력 앱을 다시 열었습니다");[self publish];});}
 -(void)activateEngine{
  if(self.activating||self.engineActive)return;
  if(!AXIsProcessTrusted()){self.notice=TCL(@"손쉬운 사용에서 Trackpad Anything을 허용한 뒤 적용 시작을 눌러 주세요");AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)@{(__bridge NSString*)kAXTrustedCheckOptionPrompt:@YES});[[NSWorkspace sharedWorkspace]openURL:[NSURL URLWithString:@"x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"]];[self publish];return;}
  self.activating=YES;self.notice=TCL(@"입력 엔진 전환 중");
  for(NSRunningApplication*a in [NSRunningApplication runningApplicationsWithBundleIdentifier:@"local.souluk.TrackpadCompat"])[a terminate];
  dispatch_after(dispatch_time(DISPATCH_TIME_NOW,NSEC_PER_SEC),dispatch_get_main_queue(),^{
- if([self engineRunning]){self.activating=NO;self.notice=TCL(@"기존 앱이 종료되지 않아 전환을 중단했습니다");[self publish];return;}
+ if([self engineRunning]){NSLog(@"engine start: 0.2 app still running");self.activating=NO;self.notice=TCL(@"기존 앱이 종료되지 않아 전환을 중단했습니다");[self publish];return;}
  unlink(self.socketPath.fileSystemRepresentation);
  dispatch_after(dispatch_time(DISPATCH_TIME_NOW,NSEC_PER_SEC),dispatch_get_main_queue(),^{[self startReceiver];});});
 }
 -(void)startReceiver{
- if([self usbRunning]){self.activating=NO;self.notice=TCL(@"기존 USB 연결이 종료되지 않았습니다. 다시 적용하거나 기존 앱으로 복구하세요");[self publish];return;}
- NSString*path=self.socketPath;dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED,0),^{int result=TCStartAtPath(path.fileSystemRepresentation);dispatch_async(dispatch_get_main_queue(),^{self.engineActive=NO;self.activating=NO;self.notice=TCLf(@"입력 엔진 종료 ({0})",@[@(result)]);[self publish];});});
+ if([self usbRunning]){NSLog(@"engine start: previous USB helper still running");self.activating=NO;self.notice=TCL(@"기존 USB 연결이 종료되지 않았습니다. 다시 적용하거나 기존 앱으로 복구하세요");[self publish];return;}
+ NSString*path=self.socketPath;dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED,0),^{int result=TCStartAtPath(path.fileSystemRepresentation);NSLog(@"engine stopped (%d)",result);dispatch_async(dispatch_get_main_queue(),^{self.engineActive=NO;self.activating=NO;self.notice=TCLf(@"입력 엔진 종료 ({0})",@[@(result)]);[self publish];});});
  dispatch_after(dispatch_time(DISPATCH_TIME_NOW,300*NSEC_PER_MSEC),dispatch_get_main_queue(),^{
  NSDictionary*d=[NSJSONSerialization JSONObjectWithData:[[NSString stringWithUTF8String:TCStatusJSON()] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
- if(![d[@"running"]boolValue]){self.activating=NO;self.notice=d[@"error"]?:TCL(@"입력 엔진을 시작하지 못했습니다");[self publish];return;}
+ if(![d[@"running"]boolValue]){NSLog(@"engine start failed: %@",d[@"error"]);self.activating=NO;self.notice=d[@"error"]?:TCL(@"입력 엔진을 시작하지 못했습니다");[self publish];return;}
  self.engineActive=YES;self.activating=NO;
  if([[self deviceTransport] isEqualToString:@"USB"])[self launchUSB];
  else self.notice=[self btNative]?TCL(@"블루투스: macOS 기본 드라이버로 동작 중입니다"):TCL(@"입력 엔진 준비 완료 · USB 연결 시 자동으로 연결합니다");
@@ -131,7 +132,8 @@ static CGEventRef TCHotkeyCallback(CGEventTapProxy proxy,CGEventType type,CGEven
 -(void)launchUSBFromMenu:(id)sender{(void)sender;if(!self.engineActive)[self activateEngine];else [self launchUSB];}
 -(void)watchDevice{
  [self updateHotkeys];
- if(!self.autoStarted&&AXIsProcessTrusted()&&!self.engineActive&&!self.activating){self.autoStarted=YES;[self activateEngine];}
+ // Keep the engine up without a button press: retry every 10 s until it runs (and after it stops), unless reverted.
+ if(!self.userStopped&&AXIsProcessTrusted()&&!self.engineActive&&!self.activating&&CFAbsoluteTimeGetCurrent()-self.lastAutoStart>=10){self.lastAutoStart=CFAbsoluteTimeGetCurrent();[self activateEngine];}
  NSString*t=[self deviceTransport]?:@"";
  if(![t isEqualToString:self.lastTransport]){
   NSString*previous=self.lastTransport;self.lastTransport=t;self.batteryPercent=nil;[self refreshBattery];
@@ -269,7 +271,7 @@ static CGEventRef TCHotkeyCallback(CGEventTapProxy proxy,CGEventType type,CGEven
  int btPID=[self bluetoothProductID];
  NSDictionary*bluetooth=@{@"productID":@(btPID),@"native":@(btPID==kPIDLightning),@"busy":@(self.btBusy),@"mirror":@([self mirrorEnabled]),@"mirrorBackup":[NSFileManager.defaultManager fileExistsAtPath:[self mirrorBackupPath]]?[self mirrorBackupPath]:@"",@"cacheBackup":[kBTCache stringByAppendingString:@".tc-before-pid-spoof"],@"cache":kBTCache};
  NSString*version=NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"]?:@"1.0.0";
- NSDictionary*d=@{@"lang":TCLanguage(),@"languagePref":TCLanguagePref(),@"transport":transport?:@"",@"bluetooth":bluetooth,@"version":version,@"batteryPercent":self.batteryPercent?:NSNull.null,@"deviceConnected":@(physicalConnected),@"running":@(self.engineActive||[self engineRunning]),@"usb":@(self.engineActive?[engine[@"connected"]boolValue]:[self usbRunning]),@"native":@YES,@"message":(self.engineActive&&[engine[@"connected"]boolValue]&&[self.notice isEqualToString:TCL(@"USB 연결을 위한 관리자 인증을 완료해 주세요")])?TCL(@"연결됨 · 설정이 입력에 적용됩니다"):self.notice?:@"",@"settings":TCReadOptions(),@"hotkeys":@([self hotkeysEnabled]),@"hotkeysActive":@(self.hotkeyTap!=NULL),@"loginItem":@(SMAppService.mainAppService.status==SMAppServiceStatusEnabled),@"engineActive":@(self.engineActive),@"activating":@(self.activating),@"trusted":@(AXIsProcessTrusted()),@"engine":engine?:@{}};NSData*j=[NSJSONSerialization dataWithJSONObject:d options:0 error:nil];NSString*json=[[NSString alloc]initWithData:j encoding:NSUTF8StringEncoding];[self.web evaluateJavaScript:[NSString stringWithFormat:@"window.tcReceive && window.tcReceive(%@)",json] completionHandler:nil];
+ NSDictionary*d=@{@"lang":TCLanguage(),@"languagePref":TCLanguagePref(),@"transport":transport?:@"",@"bluetooth":bluetooth,@"version":version,@"batteryPercent":self.batteryPercent?:NSNull.null,@"deviceConnected":@(physicalConnected),@"running":@(self.engineActive||[self engineRunning]),@"usb":@(self.engineActive?[engine[@"connected"]boolValue]:[self usbRunning]),@"native":@YES,@"message":(self.engineActive&&[engine[@"connected"]boolValue]&&[self.notice isEqualToString:TCL(@"USB 연결을 위한 관리자 인증을 완료해 주세요")])?TCL(@"연결됨 · 설정이 입력에 적용됩니다"):self.notice?:@"",@"settings":TCReadOptions(),@"hotkeys":@([self hotkeysEnabled]),@"hotkeysActive":@(self.hotkeyTap!=NULL),@"loginItem":@(SMAppService.mainAppService.status==SMAppServiceStatusEnabled),@"engineActive":@(self.engineActive),@"activating":@(self.activating),@"autoStart":@(!self.userStopped&&AXIsProcessTrusted()),@"trusted":@(AXIsProcessTrusted()),@"engine":engine?:@{}};NSData*j=[NSJSONSerialization dataWithJSONObject:d options:0 error:nil];NSString*json=[[NSString alloc]initWithData:j encoding:NSUTF8StringEncoding];[self.web evaluateJavaScript:[NSString stringWithFormat:@"window.tcReceive && window.tcReceive(%@)",json] completionHandler:nil];
 }
 -(void)userContentController:(WKUserContentController*)controller didReceiveScriptMessage:(WKScriptMessage*)message{
  (void)controller;if(!message.frameInfo.isMainFrame||![message.frameInfo.request.URL.scheme isEqualToString:@"trackpad"]||![message.body isKindOfClass:NSDictionary.class])return;
@@ -291,7 +293,7 @@ static CGEventRef TCHotkeyCallback(CGEventTapProxy proxy,CGEventType type,CGEven
  if([c isEqualToString:@"set-login"]){BOOL on=[message.body[@"value"] isKindOfClass:NSNumber.class]&&[message.body[@"value"] boolValue];NSError*e=nil;
   BOOL ok=on?[SMAppService.mainAppService registerAndReturnError:&e]:[SMAppService.mainAppService unregisterAndReturnError:&e];
   self.notice=ok?(on?TCL(@"로그인할 때 Trackpad Anything을 자동으로 실행합니다"):TCL(@"로그인 시 자동 실행을 껐습니다")):(SMAppService.mainAppService.status==SMAppServiceStatusRequiresApproval?TCL(@"시스템 설정 > 일반 > 로그인 항목에서 Trackpad Anything을 허용해 주세요"):TCL(@"로그인 항목 설정에 실패했습니다"));[self publish];return;}
- if([c isEqualToString:@"activate"]){[self activateEngine];return;}
+ if([c isEqualToString:@"activate"]){self.userStopped=NO;[self activateEngine];return;}
  if([c isEqualToString:@"restore"]){[self restore:nil];return;}
  if([c isEqualToString:@"reconnect"]){[self launchUSB];return;}
  if([c isEqualToString:@"set-hotkeys"]){BOOL on=[message.body[@"value"] isKindOfClass:NSNumber.class]&&[message.body[@"value"] boolValue];[NSUserDefaults.standardUserDefaults setBool:on forKey:@"hotkeys"];[self updateHotkeys];self.notice=on?TCL(@"키보드 단축키를 켰습니다"):TCL(@"키보드 단축키를 껐습니다");[self publish];return;}
