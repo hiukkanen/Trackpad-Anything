@@ -58,7 +58,9 @@ static void systemAction(const char*action){NSString*a=[NSString stringWithUTF8S
  // Take over from the 0.2 app so only one menu bar item remains.
  [NSUserDefaults.standardUserDefaults registerDefaults:@{@"hotkeys":@YES}];[self updateHotkeys];
  if(AXIsProcessTrusted()){self.autoStarted=YES;dispatch_async(dispatch_get_main_queue(),^{[self activateEngine];});}
- else if([self engineRunning])self.notice=TCL(@"이전 앱(0.2)이 실행 중입니다. 손쉬운 사용 허용 후 적용 시작을 누르면 하나로 합쳐집니다");
+ // Ask once at launch: this registers the app in System Settings > Accessibility so the user only flips the switch.
+ else{AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)@{(__bridge NSString*)kAXTrustedCheckOptionPrompt:@YES});
+  if([self engineRunning])self.notice=TCL(@"이전 앱(0.2)이 실행 중입니다. 손쉬운 사용 허용 후 적용 시작을 누르면 하나로 합쳐집니다");}
  WKWebViewConfiguration*cfg=[WKWebViewConfiguration new];[cfg setURLSchemeHandler:self forURLScheme:@"trackpad"];
  [cfg.userContentController addScriptMessageHandler:self name:@"trackpad"];
  self.web=[[WKWebView alloc]initWithFrame:NSMakeRect(0,0,1200,800) configuration:cfg];self.web.navigationDelegate=self;
