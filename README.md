@@ -63,6 +63,7 @@ First came a USB driver for the cable. Bluetooth was harder: Sonoma throws the t
 - macOS **14 Sonoma**, tested on 14.7.2
 - **Apple Silicon** Mac. Intel builds are not provided yet.
 - Magic Trackpad (USB‑C), USB product ID `0x0324`
+- What has been tested, and how to undo or recover: [Testing and recovery](docs/TESTING.md) · [Third‑party notices](docs/THIRD-PARTY.md)
 
 > On macOS 15.1 or later you don't need this app. Apple supports the trackpad there.
 
@@ -199,7 +200,7 @@ That's expected. It's a display field and doesn't affect which driver is used.
 ## Build from source
 
 ```sh
-# Requirements: Xcode Command Line Tools, Homebrew libusb + pkg-config, Node.js 20+
+# Requirements: Xcode Command Line Tools, Homebrew libusb + pkg-config, Node.js 22.13+
 brew install libusb pkg-config
 git clone https://github.com/souluk319/Trackpad-Anything.git
 cd Trackpad-Anything/GUI && npm ci && cd ..
