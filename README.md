@@ -2,12 +2,12 @@
 
 <h1><img src="docs/images/readme-icon.png" width="64" align="center" alt="Trackpad Anything app icon"> Trackpad Anything</h1>
 
-### Make the USB‑C Magic Trackpad work on macOS Sonoma
+### Make the USB‑C Magic Trackpad work on macOS Ventura / Sonoma
 
 Full multi‑touch gestures over **Bluetooth** and **USB** — without upgrading to macOS 15.
 
-[![macOS 14 Sonoma](https://img.shields.io/badge/macOS-14%20Sonoma-000?logo=apple&logoColor=white)](#requirements)
-[![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-arm64-E5493F)](#requirements)
+[![macOS 13–14](https://img.shields.io/badge/macOS-13%20Ventura%20%7C%2014%20Sonoma-000?logo=apple&logoColor=white)](#requirements)
+[![Intel + Apple Silicon](https://img.shields.io/badge/Intel%20%2B%20Apple%20Silicon-E5493F)](#requirements)
 [![Release](https://img.shields.io/github/v/release/souluk319/Trackpad-Anything?color=E5493F&label=release)](https://github.com/souluk319/Trackpad-Anything/releases/latest)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-8F2721)](LICENSE)
 [![SIP stays on](https://img.shields.io/badge/SIP-stays%20on-2ea44f)](#is-it-safe)
@@ -60,8 +60,8 @@ First came a USB driver for the cable. Bluetooth was harder: Sonoma throws the t
 
 ## Requirements
 
-- macOS **14 Sonoma**, tested on 14.7.2
-- **Apple Silicon** Mac. Intel builds are not provided yet.
+- macOS **13 Ventura** or **14 Sonoma** (14.7.2 is the tested configuration; the Intel build cross‑targets Ventura with deployment target 13.0 in CI)
+- **Intel** or **Apple Silicon** Mac — see [Ventura + Intel](docs/MACOS-13-INTEL.md) for build options and what is not hardware‑verified yet
 - Magic Trackpad (USB‑C), USB product ID `0x0324`
 - What has been tested, and how to undo or recover: [Testing and recovery](docs/TESTING.md) · [Third‑party notices](docs/THIRD-PARTY.md)
 
@@ -69,7 +69,7 @@ First came a USB driver for the cable. Bluetooth was harder: Sonoma throws the t
 
 ## Install
 
-1. Download `Trackpad-Anything-x.y.z-macOS-AppleSilicon.zip` from [**Releases**](https://github.com/souluk319/Trackpad-Anything/releases/latest) and unzip it.
+1. Download `Trackpad-Anything-x.y.z-macOS-Intel.zip` (Intel), `...-AppleSilicon.zip` or `...-Universal.zip` from [**Releases**](https://github.com/souluk319/Trackpad-Anything/releases/latest) and unzip it. On Ventura/Intel, build from source if no Intel zip is published yet.
 2. Move **Trackpad Anything.app** to **Applications**.
 3. **First launch:** the app isn't notarized, so macOS will warn you the first time.
    Right‑click the app → **Open** → **Open**. Or go to System Settings → Privacy & Security → **Open Anyway**.
@@ -169,7 +169,7 @@ Getting here took some digging. On Sonoma, the raw Bluetooth touch reports (`0x3
 
 ✅ verified on hardware · 🍎 handled by Apple's own driver, which also loads its haptics (Actuator) interface · 🧪 implemented, needs more testing · ❌ not available
 
-Tested on an M1 Pro MacBook Pro running macOS 14.7.2. Reports from other Macs are very welcome. Please [open an issue](https://github.com/souluk319/Trackpad-Anything/issues).
+Tested on an M1 Pro MacBook Pro running macOS 14.7.2. The Intel build targeting Ventura is compiled and checked in CI but not yet tested on real trackpad hardware; reports from other Macs are very welcome. Please [open an issue](https://github.com/souluk319/Trackpad-Anything/issues).
 
 ## FAQ
 
@@ -181,8 +181,8 @@ If you can, do. Some setups can't: audio plugins, managed machines, older softwa
 Reboots: yes. Minor macOS updates may rewrite the Bluetooth cache. If gestures stop, open the app and click <i>Enable</i> again. If an update changes the cache format, the tool refuses to write and tells you.
 </details>
 
-<details><summary><b>Intel Macs?</b></summary>
-Not yet. The release is Apple Silicon only, because the bundled libusb is arm64. Building from source on Intel should work. A universal build is planned.
+<details><summary><b>Intel Macs and macOS Ventura?</b></summary>
+Yes for the build: Intel and universal builds are supported (`TC_ARCH=x86_64` / `TC_ARCH=universal`), and the minimum OS is 13.0. The Bluetooth product‑ID change uses the same cache file on Ventura, but its exact layout has not been verified on hardware yet — the tool refuses to write if it differs. USB gestures do not depend on the macOS version. See [Ventura + Intel](docs/MACOS-13-INTEL.md).
 </details>
 
 <details><summary><b>Why does the app ask for my administrator password?</b></summary>
@@ -209,6 +209,13 @@ TC_SIGN=adhoc bash scripts/build-gui.sh   # → build/Trackpad Anything.app
 bash scripts/test.sh                      # gesture engine + settings tests
 bash scripts/package-release.sh           # → build/release/*.zip
 ```
+
+Build options:
+
+- `TC_ARCH=native` (default) builds for the Mac you are on; `x86_64`, `arm64` and `universal` are also supported.
+  A universal build needs a static libusb containing both slices — see [Ventura + Intel](docs/MACOS-13-INTEL.md).
+- `TC_DEPLOYMENT_TARGET=13.0` (default) sets both the compiler deployment target and `LSMinimumSystemVersion`.
+- `TC_SIGN=adhoc` avoids needing a local signing certificate; otherwise `scripts/sign-local.py` is used.
 
 For day‑to‑day development, `python3 scripts/setup-local-signing.py` creates a stable local signing identity, so macOS keeps the Accessibility permission across rebuilds. See [docs/LOCAL-SIGNING.ko.md](docs/LOCAL-SIGNING.ko.md).
 

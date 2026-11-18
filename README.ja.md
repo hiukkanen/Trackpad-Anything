@@ -2,12 +2,12 @@
 
 <h1><img src="docs/images/readme-icon.png" width="64" align="center" alt="Trackpad Anything アプリアイコン"> Trackpad Anything</h1>
 
-### macOS SonomaでUSB‑C版Magic Trackpadを使う
+### macOS Ventura / SonomaでUSB‑C版Magic Trackpadを使う
 
 macOS 15にアップデートせずに、**Bluetooth**でも**USB**でもマルチタッチジェスチャが使えます。
 
-[![macOS 14 Sonoma](https://img.shields.io/badge/macOS-14%20Sonoma-000?logo=apple&logoColor=white)](#動作環境)
-[![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-arm64-E5493F)](#動作環境)
+[![macOS 13–14](https://img.shields.io/badge/macOS-13%20Ventura%20%7C%2014%20Sonoma-000?logo=apple&logoColor=white)](#動作環境)
+[![Intel + Apple Silicon](https://img.shields.io/badge/Intel%20%2B%20Apple%20Silicon-E5493F)](#動作環境)
 [![Release](https://img.shields.io/github/v/release/souluk319/Trackpad-Anything?color=E5493F&label=release)](https://github.com/souluk319/Trackpad-Anything/releases/latest)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-8F2721)](LICENSE)
 
@@ -59,8 +59,8 @@ macOS 15にアップデートせずに、**Bluetooth**でも**USB**でもマル�
 
 ## 動作環境
 
-- macOS **14 Sonoma**（14.7.2で確認）
-- **Apple Silicon** 搭載Mac（Intel版は未提供）
+- macOS **13 Ventura** または **14 Sonoma**（14.7.2で確認、IntelビルドはCIで deployment target 13.0 によりVentura向けにビルド）
+- **Intel** または **Apple Silicon** 搭載Mac — ビルド方法と未検証項目は [Ventura + Intel](docs/MACOS-13-INTEL.md) を参照してください
 - Magic Trackpad（USB‑C）、USB製品ID `0x0324`
 - テスト済みの範囲と、元に戻す・復旧する方法：[テストと復旧（英語）](docs/TESTING.md) · [サードパーティ通知（英語）](docs/THIRD-PARTY.md)
 
@@ -68,7 +68,7 @@ macOS 15にアップデートせずに、**Bluetooth**でも**USB**でもマル�
 
 ## インストール
 
-1. [**Releases**](https://github.com/souluk319/Trackpad-Anything/releases/latest) から `Trackpad-Anything-x.y.z-macOS-AppleSilicon.zip` をダウンロードして展開します。
+1. [**Releases**](https://github.com/souluk319/Trackpad-Anything/releases/latest) から `Trackpad-Anything-x.y.z-macOS-Intel.zip`、`...-AppleSilicon.zip`、`...-Universal.zip` のうちMacに合うものをダウンロードして展開します。Ventura/Intel用のzipがまだなければソースからビルドしてください。
 2. **Trackpad Anything.app** を **アプリケーション** フォルダに移動します。
 3. **初回起動時：** 公証されていないアプリのため、macOSが警告を表示します。
    アプリを右クリック → **開く** → **開く** を選びます。または、システム設定 → プライバシーとセキュリティで **このまま開く** をクリックします。
@@ -126,8 +126,8 @@ macOS 15にアップデートせずに、**Bluetooth**でも**USB**でもマル�
 再起動後も維持されます。macOSのアップデートでBluetoothの記録が書き換えられることがあります。ジェスチャが止まったら、アプリでもう一度オンにしてください。アップデートで記録の形式が変わった場合は、何も変更せずにお知らせします。
 </details>
 
-<details><summary><b>Intel Macは？</b></summary>
-まだです。同梱のlibusbがarm64専用のため、リリースはApple Silicon専用です。Intel上でソースからビルドすれば動作するはずです。
+<details><summary><b>Intel MacとmacOS Venturaは？</b></summary>
+ビルドはサポートしています。`TC_ARCH=x86_64` / `TC_ARCH=universal` でビルドでき、最小OSは13.0です。VenturaでもBluetoothの製品ID変更は同じキャッシュファイルを使いますが、正確なレイアウトは実機で未検証です。形式が異なる場合は何も変更せずに停止します。USBジェスチャはmacOSのバージョンに依存しません。[Ventura + Intel](docs/MACOS-13-INTEL.md) を参照してください。
 </details>
 
 ## ソースからビルド

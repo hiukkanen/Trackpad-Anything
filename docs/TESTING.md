@@ -12,13 +12,18 @@ bash scripts/test.sh
 | `tests/SettingsTests.m` | Settings round trip, mutually exclusive gestures, malformed values, write failure. |
 | `tests/bluetooth_setup_tests.py` | `bt-spoof` on fixture caches: apply, restore, repeated apply/restore, and refusal (no write, no backup) on unexpected layouts: no trackpad, two trackpads, wrong field sizes, unknown product ID, missing or ambiguous `SdpCache`, a non-plist file, a missing file. |
 
-CI (`.github/workflows/ci.yml`) runs the tests and builds the release zip on a macOS runner (deployment target 14.0) for every push and pull
-request. Hardware behavior (Bluetooth, USB, gestures) can only be checked on a real trackpad.
+CI (`.github/workflows/ci.yml`) runs the tests and builds the release zip on an **Intel `macos-15-intel` runner** for
+every push and pull request. GitHub retired the `macos-13` runner image in December 2025, so CI no longer runs on
+Ventura itself; instead it cross-targets Ventura with deployment target 13.0 and checks that the binaries are x86_64.
+Hardware behavior (Bluetooth, USB, gestures) can only be checked on a real trackpad; see
+[Ventura + Intel](MACOS-13-INTEL.md) for the build options and the one cache-layout detail still needing on-machine
+confirmation.
 
 ## Bluetooth change: what it does and what to expect
 
 `bt-spoof` (run by the app with administrator rights) edits one record in
-`/Library/Bluetooth/Library/Preferences/com.apple.MobileBluetooth.devices.plist`:
+`/Library/Bluetooth/Library/Preferences/com.apple.MobileBluetooth.devices.plist` (the same file on Ventura, Sonoma and
+Sequoia — the `SdpCache` field layout was reverse-engineered on Sonoma and is not hardware-verified on Ventura):
 
 - It only proceeds when it finds **exactly one** trackpad record whose fields have the expected layout. Otherwise it
   stops before writing anything. With two Magic Trackpads paired it refuses; unpair one first.
@@ -51,6 +56,7 @@ request. Hardware behavior (Bluetooth, USB, gestures) can only be checked on a r
 | Keyboard desktop shortcuts | ✅ |
 | Other Apple Silicon models | not tested |
 | Other macOS 14.x versions | not tested |
+| Intel Mac, macOS 13 Ventura | build verified in CI; not hardware-tested — [notes](MACOS-13-INTEL.md) |
 | Two trackpads paired | refuses by design (fixture-tested, not on hardware) |
 
 Reports from other Macs are welcome: use the *Bug or compatibility report* issue template.

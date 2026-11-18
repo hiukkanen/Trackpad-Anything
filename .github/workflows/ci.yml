@@ -7,13 +7,13 @@ permissions:
   contents: read
 jobs:
   test:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - name: Engine, settings and bt-spoof fixture tests
         run: bash scripts/test.sh
   release-build:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -35,4 +35,9 @@ jobs:
           for tool in usb-helper bt-spoof space-command; do test -x "$app/Contents/Resources/$tool"; done
           test -f "$app/Contents/Resources/GUI/index.html"
           test -f "$app/Contents/Resources/ThirdParty-libusb-COPYING.txt"
+          # macos-15-intel is x86_64; the default native build must stay Intel.
+          for bin in "$app/Contents/MacOS/TrackpadCompatGUI" "$app/Contents/Resources/usb-helper"; do
+            echo "$bin: $(lipo -archs "$bin")"
+            lipo -archs "$bin" | grep -q x86_64
+          done
           ls -l build/release/*.zip

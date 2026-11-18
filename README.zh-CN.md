@@ -2,12 +2,12 @@
 
 <h1><img src="docs/images/readme-icon.png" width="64" align="center" alt="Trackpad Anything 应用图标"> Trackpad Anything</h1>
 
-### 在 macOS Sonoma 上使用 USB‑C 版妙控板
+### 在 macOS Ventura / Sonoma 上使用 USB‑C 版妙控板
 
 无需升级到 macOS 15，**蓝牙**和 **USB** 连接都能使用多点触控手势。
 
-[![macOS 14 Sonoma](https://img.shields.io/badge/macOS-14%20Sonoma-000?logo=apple&logoColor=white)](#系统要求)
-[![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-arm64-E5493F)](#系统要求)
+[![macOS 13–14](https://img.shields.io/badge/macOS-13%20Ventura%20%7C%2014%20Sonoma-000?logo=apple&logoColor=white)](#系统要求)
+[![Intel + Apple Silicon](https://img.shields.io/badge/Intel%20%2B%20Apple%20Silicon-E5493F)](#系统要求)
 [![Release](https://img.shields.io/github/v/release/souluk319/Trackpad-Anything?color=E5493F&label=release)](https://github.com/souluk319/Trackpad-Anything/releases/latest)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-8F2721)](LICENSE)
 
@@ -59,8 +59,8 @@ USB 先通过直接读取数据解决了。蓝牙则难得多：Sonoma 会在任
 
 ## 系统要求
 
-- macOS **14 Sonoma**（已在 14.7.2 上测试）
-- **Apple 芯片** Mac（暂不提供 Intel 版本）
+- macOS **13 Ventura** 或 **14 Sonoma**（已在 14.7.2 上测试；Intel 构建在 CI 中以 deployment target 13.0 面向 Ventura 编译）
+- **Intel** 或 **Apple 芯片** Mac — 构建方式和尚未实测的部分见 [Ventura + Intel](docs/MACOS-13-INTEL.md)
 - 妙控板（USB‑C），USB 产品 ID `0x0324`
 - 已测试范围以及撤销和恢复方法：[测试与恢复（英文）](docs/TESTING.md) · [第三方声明（英文）](docs/THIRD-PARTY.md)
 
@@ -68,7 +68,7 @@ USB 先通过直接读取数据解决了。蓝牙则难得多：Sonoma 会在任
 
 ## 安装
 
-1. 从 [**Releases**](https://github.com/souluk319/Trackpad-Anything/releases/latest) 下载 `Trackpad-Anything-x.y.z-macOS-AppleSilicon.zip` 并解压。
+1. 从 [**Releases**](https://github.com/souluk319/Trackpad-Anything/releases/latest) 下载与你的 Mac 匹配的 `Trackpad-Anything-x.y.z-macOS-Intel.zip`、`...-AppleSilicon.zip` 或 `...-Universal.zip` 并解压。若尚无 Ventura/Intel 版 zip，请从源码构建。
 2. 将 **Trackpad Anything.app** 移到 **应用程序** 文件夹。
 3. **首次打开：** 应用未经公证，macOS 首次会显示警告。
    右键点按应用 → **打开** → **打开**。或前往“系统设置” → “隐私与安全性”，点按 **仍要打开**。
@@ -126,8 +126,8 @@ USB 先通过直接读取数据解决了。蓝牙则难得多：Sonoma 会在任
 重启后依然有效。macOS 更新可能会改写蓝牙记录；如果手势失效，请在应用中再次启用。如果更新改变了记录格式，工具会拒绝写入并提示你。
 </details>
 
-<details><summary><b>支持 Intel Mac 吗？</b></summary>
-暂不支持。内置的 libusb 仅为 arm64，因此发行版仅支持 Apple 芯片。在 Intel Mac 上从源码构建应该可以运行。
+<details><summary><b>支持 Intel Mac 和 macOS Ventura 吗？</b></summary>
+构建方面已支持：可用 `TC_ARCH=x86_64` / `TC_ARCH=universal` 构建，最低系统版本为 13.0。Ventura 上蓝牙产品 ID 修改使用的是同一个缓存文件，但确切格式尚未在真机上验证；格式不符时工具会拒绝写入。USB 手势与 macOS 版本无关。详见 [Ventura + Intel](docs/MACOS-13-INTEL.md)。
 </details>
 
 ## 从源码构建

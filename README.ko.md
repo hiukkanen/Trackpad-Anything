@@ -2,12 +2,12 @@
 
 <h1><img src="docs/images/readme-icon.png" width="64" align="center" alt="Trackpad Anything 앱 아이콘"> Trackpad Anything</h1>
 
-### macOS Sonoma에서 USB‑C 매직 트랙패드 쓰기
+### macOS Ventura / Sonoma에서 USB‑C 매직 트랙패드 쓰기
 
 macOS 15로 올리지 않고 **블루투스**와 **USB** 모두에서 멀티터치 제스처를 쓸 수 있어요.
 
-[![macOS 14 Sonoma](https://img.shields.io/badge/macOS-14%20Sonoma-000?logo=apple&logoColor=white)](#요구-사항)
-[![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-arm64-E5493F)](#요구-사항)
+[![macOS 13–14](https://img.shields.io/badge/macOS-13%20Ventura%20%7C%2014%20Sonoma-000?logo=apple&logoColor=white)](#요구-사항)
+[![Intel + Apple Silicon](https://img.shields.io/badge/Intel%20%2B%20Apple%20Silicon-E5493F)](#요구-사항)
 [![Release](https://img.shields.io/github/v/release/souluk319/Trackpad-Anything?color=E5493F&label=release)](https://github.com/souluk319/Trackpad-Anything/releases/latest)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-8F2721)](LICENSE)
 
@@ -59,8 +59,8 @@ USB부터 직접 읽어서 해결했고, 블루투스는 훨씬 어려웠어요.
 
 ## 요구 사항
 
-- macOS **14 Sonoma**. 14.7.2에서 시험했어요.
-- **Apple Silicon** Mac. Intel 빌드는 아직 없어요.
+- macOS **13 Ventura** 또는 **14 Sonoma** (14.7.2에서 시험, Intel 빌드는 CI에서 배포 대상 13.0으로 Ventura를 목표로 빌드)
+- **Intel** 또는 **Apple Silicon** Mac — [Ventura + Intel](docs/MACOS-13-INTEL.md) 문서에서 빌드 방법과 하드웨어 검증 범위를 확인하세요.
 - Magic Trackpad (USB‑C), USB 제품 ID `0x0324`
 - 시험한 범위와 되돌리기·복구 방법: [테스트 및 복구 (영문)](docs/TESTING.md) · [서드파티 고지 (영문)](docs/THIRD-PARTY.md)
 
@@ -68,7 +68,7 @@ USB부터 직접 읽어서 해결했고, 블루투스는 훨씬 어려웠어요.
 
 ## 설치
 
-1. [**Releases**](https://github.com/souluk319/Trackpad-Anything/releases/latest)에서 `Trackpad-Anything-x.y.z-macOS-AppleSilicon.zip`을 받아 압축을 풀어요.
+1. [**Releases**](https://github.com/souluk319/Trackpad-Anything/releases/latest)에서 `Trackpad-Anything-x.y.z-macOS-Intel.zip`, `...-AppleSilicon.zip`, `...-Universal.zip` 중 Mac에 맞는 파일을 받아 압축을 풀어요. Ventura/Intel용 zip이 아직 없다면 소스에서 빌드하세요.
 2. **Trackpad Anything.app**을 **응용 프로그램** 폴더로 옮겨요.
 3. **처음 실행할 때:** 공증받지 않은 앱이라 macOS가 경고를 띄워요.
    앱을 우클릭 → **열기** → **열기**를 누르세요. 또는 시스템 설정 → 개인정보 보호 및 보안에서 **확인 없이 열기**를 눌러요.
@@ -146,8 +146,8 @@ xattr -dr com.apple.quarantine "/Applications/Trackpad Anything.app"
 재부팅해도 유지돼요. macOS 업데이트가 블루투스 기록을 다시 쓸 수 있어요. 제스처가 멈추면 앱에서 다시 켜 주세요. 업데이트로 기록 형식이 바뀌면 아무것도 바꾸지 않고 알려줘요.
 </details>
 
-<details><summary><b>Intel Mac은요?</b></summary>
-아직이에요. 포함된 libusb가 arm64 전용이라 릴리스는 Apple Silicon 전용이에요. Intel에서 소스로 직접 빌드하면 동작할 거예요.
+<details><summary><b>Intel Mac과 macOS Ventura는요?</b></summary>
+빌드는 지원해요. `TC_ARCH=x86_64` / `TC_ARCH=universal`로 빌드할 수 있고 최소 OS는 13.0이에요. Ventura에서도 블루투스 제품 ID 변경은 같은 캐시 파일을 쓰지만 정확한 레이아웃은 하드웨어에서 검증되지 않았어요. 형식이 다르면 아무것도 바꾸지 않고 중단해요. USB 제스처는 macOS 버전과 무관해요. [Ventura + Intel](docs/MACOS-13-INTEL.md) 문서를 참고하세요.
 </details>
 
 <details><summary><b>단축키는 일반 키보드·마우스에서도 되나요?</b></summary>

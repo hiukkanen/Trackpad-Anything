@@ -23,3 +23,7 @@ bash scripts/build-gui.sh
 `scripts/build-gui.sh` links whatever `libusb-1.0` pkg-config reports. The libusb license text ships inside the app
 at `Contents/Resources/ThirdParty-libusb-COPYING.txt`. libusb's source code is available at
 <https://github.com/libusb/libusb>. Each release states the libusb version it was built with.
+
+The static library's architecture must match the build target: Intel Homebrew (`/usr/local`) provides an x86_64
+libusb for Intel builds, and a universal build (`TC_ARCH=universal`) requires a libusb containing both `x86_64` and
+`arm64` (verify with `lipo -archs`). The build script checks this and fails early with a clear message.
