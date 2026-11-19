@@ -62,11 +62,7 @@ static void systemAction(const char*action){NSString*a=[NSString stringWithUTF8S
  // Ask once at launch: this registers the app in System Settings > Accessibility so the user only flips the switch.
  else{AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)@{(__bridge NSString*)kAXTrustedCheckOptionPrompt:@YES});
   if([self engineRunning])self.notice=TCL(@"이전 앱(0.2)이 실행 중입니다. 손쉬운 사용 허용 후 적용 시작을 누르면 하나로 합쳐집니다");}
- WKWebViewConfiguration*cfg=[WKWebViewConfiguration new];[cfg setURLSchemeHandler:self forURLScheme:@"trackpad"];
- [cfg.userContentController addScriptMessageHandler:self name:@"trackpad"];
- self.web=[[WKWebView alloc]initWithFrame:NSMakeRect(0,0,1200,800) configuration:cfg];self.web.navigationDelegate=self;
- self.window=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,1200,800) styleMask:NSWindowStyleMaskTitled|NSWindowStyleMaskClosable|NSWindowStyleMaskMiniaturizable|NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
- self.window.title=@"Trackpad Anything";self.window.minSize=NSMakeSize(1000,700);self.window.contentView=self.web;[self.window center];[self.window makeKeyAndOrderFront:nil];
+ [self ensureWindow];[self.window makeKeyAndOrderFront:nil];
  NSMenu*menu=[NSMenu new];NSMenuItem*item=[NSMenuItem new];NSMenu*appMenu=[NSMenu new];[appMenu addItemWithTitle:TCL(@"종료") action:@selector(terminate:) keyEquivalent:@"q"];item.submenu=appMenu;[menu addItem:item];NSApp.mainMenu=menu;
  // TA_START_PAGE (optional): open on a given sidebar page, e.g. for screenshots.
  NSString*start=NSProcessInfo.processInfo.environment[@"TA_START_PAGE"];NSString*url=@"trackpad://app/index.html";if(start.length)url=[url stringByAppendingFormat:@"#%@",[start stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLFragmentAllowedCharacterSet]];
@@ -74,7 +70,19 @@ static void systemAction(const char*action){NSString*a=[NSString stringWithUTF8S
 }
 -(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)sender{(void)sender;return !self.engineActive&&!self.activating;}
 -(NSString*)support{return [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/TrackpadCompat"];}
--(void)showWindow:(id)sender{(void)sender;[self.window makeKeyAndOrderFront:nil];[NSApp activateIgnoringOtherApps:YES];}
+// A window created in code defaults to isReleasedWhenClosed=YES. AppKit would free it when
+// the user closes the settings window while our strong property still points at it; the next
+// showWindow then crashes in objc_retain inside the atomic property getter. Keep ownership here.
+-(void)ensureWindow{
+ if(self.window)return;
+ WKWebViewConfiguration*cfg=[WKWebViewConfiguration new];[cfg setURLSchemeHandler:self forURLScheme:@"trackpad"];
+ [cfg.userContentController addScriptMessageHandler:self name:@"trackpad"];
+ self.web=[[WKWebView alloc]initWithFrame:NSMakeRect(0,0,1200,800) configuration:cfg];self.web.navigationDelegate=self;
+ self.window=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,1200,800) styleMask:NSWindowStyleMaskTitled|NSWindowStyleMaskClosable|NSWindowStyleMaskMiniaturizable|NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
+ [self.window setReleasedWhenClosed:NO];
+ self.window.title=@"Trackpad Anything";self.window.minSize=NSMakeSize(1000,700);self.window.contentView=self.web;[self.window center];
+}
+-(void)showWindow:(id)sender{(void)sender;[self ensureWindow];[self.window makeKeyAndOrderFront:nil];[NSApp activateIgnoringOtherApps:YES];}
 -(BOOL)applicationShouldHandleReopen:(NSApplication*)app hasVisibleWindows:(BOOL)flag{(void)app;(void)flag;[self showWindow:nil];return YES;}
 -(NSString*)socketPath{return [[self support]stringByAppendingPathComponent:@"trackpad.sock"];}
 -(void)stopNewEngine{TCStop();if(self.engineActive)unlink(self.socketPath.fileSystemRepresentation);}

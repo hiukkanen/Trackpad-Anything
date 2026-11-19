@@ -34,6 +34,13 @@ Sequoia — the `SdpCache` field layout was reverse-engineered on Sonoma and is 
   few seconds** and reconnect by themselves: keyboards, mice, headphones.
 - It reads the cache back and reports failure if macOS rewrote it.
 
+## Fixed: reopening the settings window
+
+Closing the settings window and then choosing **Trackpad Anything 설정 열기** from the menu bar used to crash with
+`EXC_BAD_ACCESS` in `-[TPHost showWindow:]` on macOS 13. A window created in code defaults to
+`isReleasedWhenClosed=YES`; AppKit freed it on close while the strong `window` property still held it, so the next
+getter retained freed memory. The window is now created with `releasedWhenClosed=NO` and rebuilt on demand.
+
 ## Recovery
 
 | Situation | What to do |
